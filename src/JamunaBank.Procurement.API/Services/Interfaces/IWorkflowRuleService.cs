@@ -1,0 +1,4 @@
+using JamunaBank.Procurement.API.DTOs;using JamunaBank.Procurement.API.Models;
+namespace JamunaBank.Procurement.API.Services.Interfaces;
+public interface IWorkflowRuleService
+{Task<IReadOnlyList<WorkflowRuleDto>> GetAllAsync(bool activeOnly,CancellationToken ct);Task<WorkflowRuleDto?> GetByIdAsync(long id,CancellationToken ct);Task<IReadOnlyList<WorkflowRuleDto>> GetByAssetAsync(long assetId,bool activeOnly,CancellationToken ct);Task<StoredProcedureResult?> CreateAsync(SaveWorkflowRuleRequest request,CancellationToken ct);Task<StoredProcedureResult?> UpdateAsync(long id,SaveWorkflowRuleRequest request,CancellationToken ct);Task<StoredProcedureResult?> SetActiveAsync(long id,bool active,CancellationToken ct);Task<WorkflowEvaluationDto?> EvaluateAsync(EvaluateWorkflowRuleRequest request,CancellationToken ct);}

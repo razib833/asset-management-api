@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/JamunaBank.Procurement.API/JamunaBank.Procurement.API.csproj" />
+    <Project Path="tests/JamunaBank.Procurement.API.Tests/JamunaBank.Procurement.API.Tests.csproj" />
+  </Folder>
+</Solution>

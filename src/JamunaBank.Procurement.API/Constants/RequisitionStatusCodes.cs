@@ -1,0 +1,2 @@
+namespace JamunaBank.Procurement.API.Constants;
+public static class RequisitionStatusCodes { public const string Draft="DRAFT", Submitted="SUBMITTED", ManagerReturned="MANAGER_RETURNED", ManagerRejected="MANAGER_REJECTED", InWorkflow="IN_WORKFLOW", Returned="RETURNED", Rejected="REJECTED", NotRecommended="NOT_RECOMMENDED", ReadyForProcurement="READY_FOR_PROCUREMENT", ProcurementInProgress="PROCUREMENT_IN_PROGRESS", Completed="COMPLETED"; }

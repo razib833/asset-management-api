@@ -1,0 +1,3 @@
+using JamunaBank.Procurement.API.DTOs;using JamunaBank.Procurement.API.Models;
+namespace JamunaBank.Procurement.API.Services.Interfaces;
+public interface IRequisitionMakerService{Task<StoredProcedureResult?> CreateAsync(SaveRequisitionRequest request,CancellationToken ct);Task<StoredProcedureResult?> UpdateAsync(long id,SaveRequisitionRequest request,CancellationToken ct);Task<RequisitionDetailDto?> GetAsync(long id,CancellationToken ct);Task<IReadOnlyList<RequisitionSummaryDto>> GetMineAsync(CancellationToken ct);Task<StoredProcedureResult?> SubmitAsync(long id,string? remarks,CancellationToken ct);}

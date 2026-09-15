@@ -1,0 +1,4 @@
+using JamunaBank.Procurement.API.Constants;using JamunaBank.Procurement.API.DTOs;using JamunaBank.Procurement.API.Models;using JamunaBank.Procurement.API.Services.Interfaces;using Microsoft.AspNetCore.Authorization;using Microsoft.AspNetCore.Mvc;
+namespace JamunaBank.Procurement.API.Controllers;
+[ApiController,Authorize(Policy=AuthorizationPolicyNames.Admin),Route("api/audit-log")]
+public sealed class AuditLogController(ISupportingService service):ControllerBase{[HttpGet]public async Task<ActionResult<ApiResponse<IReadOnlyList<AuditLogDto>>>>Get([FromQuery]string?entityName,[FromQuery]long?entityId,[FromQuery]int page=1,[FromQuery]int pageSize=50,CancellationToken c=default){var x=await service.GetAuditAsync(entityName,entityId,page,pageSize,c);return Ok(ApiResponse<IReadOnlyList<AuditLogDto>>.Ok(x,"Audit records loaded.",HttpContext.TraceIdentifier));}}

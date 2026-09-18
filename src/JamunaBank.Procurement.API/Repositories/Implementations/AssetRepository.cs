@@ -12,7 +12,7 @@ public sealed class AssetRepository(IStoredProcedureExecutor procedures) : BaseR
         [SqlParameterFactory.Input("@CategoryId", SqlDbType.BigInt, categoryId), SqlParameterFactory.Input("@ActiveOnly", SqlDbType.Bit, activeOnly)], ct);
 
     public Task<AssetDto?> GetByIdAsync(long id, CancellationToken ct) =>
-        StoredProcedures.QuerySingleOrDefaultAsync("dbo.usp_Asset_GetById", r => Map(r, false),
+        StoredProcedures.QuerySingleOrDefaultAsync("dbo.usp_Asset_GetById", r => Map(r, true),
         [SqlParameterFactory.Input("@AssetId", SqlDbType.BigInt, id)], ct);
 
     public Task<StoredProcedureResult?> CreateAsync(CreateAssetRequest x, string actor, CancellationToken ct) =>

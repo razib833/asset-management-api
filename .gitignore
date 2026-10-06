@@ -4,6 +4,8 @@
 .vs/
 .vscode/
 TestResults/
+artifacts/
+.dotnet-home/
 *.user
 *.suo
 *.log

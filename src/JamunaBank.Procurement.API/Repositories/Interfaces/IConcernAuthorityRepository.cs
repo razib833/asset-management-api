@@ -4,6 +4,8 @@ namespace JamunaBank.Procurement.API.Repositories.Interfaces;
 public interface IConcernAuthorityRepository
 {
  Task<IReadOnlyList<ConcernAuthorityPendingDto>> GetPendingAsync(string employeeId,CancellationToken ct);
+ Task<IReadOnlyList<BranchRequisitionDto>> GetAllAsync(string employeeId,string? requisitionNo,long? assetId,string? requisitionType,string? status,DateOnly? fromDate,DateOnly? toDate,CancellationToken ct);
+ Task<RequisitionDetailDto?> GetAllDetailAsync(long id,string employeeId,CancellationToken ct);
  Task<RequisitionDetailDto?> GetDetailAsync(long id,string employeeId,CancellationToken ct);
  Task<ConcernAuthorityReviewContextDto?> GetContextAsync(long id,string employeeId,CancellationToken ct);
  Task<StoredProcedureResult?> ApproveAsync(long id,string employeeId,string? remarks,Guid? batchId,CancellationToken ct);

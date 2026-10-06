@@ -7,6 +7,8 @@ namespace JamunaBank.Procurement.API.Services.Implementations;
 public sealed class ConcernAuthorityService(IConcernAuthorityRepository repository,ICurrentUserService currentUser):IConcernAuthorityService
 {
  public Task<IReadOnlyList<ConcernAuthorityPendingDto>> GetPendingAsync(CancellationToken c)=>repository.GetPendingAsync(currentUser.EmployeeId,c);
+ public Task<IReadOnlyList<BranchRequisitionDto>> GetAllAsync(string?no,long?assetId,string?type,string?status,DateOnly?from,DateOnly?to,CancellationToken c){if(assetId is<=0)throw new ArgumentOutOfRangeException(nameof(assetId));if(from.HasValue&&to.HasValue&&from>to)throw new ArgumentException("From date cannot be after to date.");return repository.GetAllAsync(currentUser.EmployeeId,no,assetId,type,status,from,to,c);}
+ public Task<RequisitionDetailDto?> GetAllDetailAsync(long id,CancellationToken c)=>repository.GetAllDetailAsync(Valid(id),currentUser.EmployeeId,c);
  public Task<RequisitionDetailDto?> GetDetailAsync(long id,CancellationToken c)=>repository.GetDetailAsync(Valid(id),currentUser.EmployeeId,c);
  public Task<ConcernAuthorityReviewContextDto?> GetContextAsync(long id,CancellationToken c)=>repository.GetContextAsync(Valid(id),currentUser.EmployeeId,c);
  public Task<StoredProcedureResult?> ApproveAsync(long id,string?m,CancellationToken c){Length(m);return repository.ApproveAsync(Valid(id),currentUser.EmployeeId,m?.Trim(),null,c);}

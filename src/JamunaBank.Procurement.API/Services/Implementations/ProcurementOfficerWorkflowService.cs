@@ -3,10 +3,12 @@ using JamunaBank.Procurement.API.Models;
 using JamunaBank.Procurement.API.Repositories.Interfaces;
 using JamunaBank.Procurement.API.Services.Interfaces;
 namespace JamunaBank.Procurement.API.Services.Implementations;
-public sealed class ProcurementOfficerWorkflowService(IProcurementOfficerWorkflowRepository repository,ICurrentUserService currentUser):IProcurementOfficerWorkflowService
+public sealed class ProcurementOfficerWorkflowService(IProcurementOfficerWorkflowRepository repository,IRequisitionMakerRepository requisitions,ICurrentUserService currentUser):IProcurementOfficerWorkflowService
 {
  public Task<IReadOnlyList<ProcurementOfficerRequisitionDto>>GetAssignedAsync(CancellationToken c)=>repository.GetAssignedAsync(currentUser.EmployeeId,c);
  public Task<RequisitionDetailDto?>GetDetailAsync(long id,CancellationToken c)=>repository.GetDetailAsync(Valid(id),currentUser.EmployeeId,c);
+ public Task<IReadOnlyList<BranchRequisitionDto>>GetAllAsync(string?no,long?assetId,string?type,string?status,DateOnly?from,DateOnly?to,CancellationToken c){if(assetId is<=0)throw new ArgumentOutOfRangeException(nameof(assetId));if(from.HasValue&&to.HasValue&&from>to)throw new ArgumentException("From date cannot be after to date.");return requisitions.GetAllAsync(no,assetId,type,status,from,to,c);}
+ public async Task<RequisitionDetailDto?>GetAllDetailAsync(long id,CancellationToken c){Valid(id);var requester=await requisitions.GetRequesterAsync(id,c);return requester is null?null:await requisitions.GetAsync(id,requester,c);}
  public Task<StoredProcedureResult?>TakeAsync(long id,string?m,CancellationToken c){Length(m);return repository.TakeAsync(Valid(id),currentUser.EmployeeId,m?.Trim(),c);}
  public Task<StoredProcedureResult?>ApproveAsync(long id,string?m,CancellationToken c){Length(m);return repository.ApproveAsync(Valid(id),currentUser.EmployeeId,m?.Trim(),c);}
  public Task<StoredProcedureResult?>ReturnAsync(long id,string?m,CancellationToken c)=>repository.ReturnAsync(Valid(id),currentUser.EmployeeId,Required(m),c);

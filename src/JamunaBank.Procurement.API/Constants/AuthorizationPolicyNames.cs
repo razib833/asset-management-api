@@ -9,5 +9,6 @@ public static class AuthorizationPolicyNames
     public const string ConcernOfficial = "Role:ConcernOfficial";
     public const string ConcernAuthority = "Role:ConcernAuthority";
     public const string ProcurementTracker = "Role:ProcurementTracker";
+    public const string ProcurementPrint = "Role:ProcurementPrint";
     public const string Admin = "Role:Admin";
 }

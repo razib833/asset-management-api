@@ -76,6 +76,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IConcernAuthorityService, ConcernAuthorityService>();
         services.AddScoped<IProcurementTrackingRepository, ProcurementTrackingRepository>();
         services.AddScoped<IProcurementTrackingService, ProcurementTrackingService>();
+        services.AddScoped<IRequisitionFormRepository, RequisitionFormRepository>();
+        services.AddScoped<IRequisitionFormService, RequisitionFormService>();
+        services.AddScoped<IProcurementDashboardRepository, ProcurementDashboardRepository>();
+        services.AddScoped<IProcurementDashboardService, ProcurementDashboardService>();
         services.AddScoped<IWorkOrderRepository, WorkOrderRepository>();
         services.AddScoped<IWorkOrderService, WorkOrderService>();
         services.AddScoped<ISupportingRepository, SupportingRepository>();
@@ -129,6 +133,7 @@ public static class ServiceCollectionExtensions
                 RoleCodes.ProcurementOfficer,
                 RoleCodes.ProcurementAuthority,
                 RoleCodes.Admin))
+            .AddPolicy(AuthorizationPolicyNames.ProcurementPrint, policy => policy.RequireRole(RoleCodes.ProcurementOfficer,RoleCodes.ProcurementAuthority))
             .AddPolicy(AuthorizationPolicyNames.Admin, policy => policy.RequireRole(RoleCodes.Admin));
     }
 }

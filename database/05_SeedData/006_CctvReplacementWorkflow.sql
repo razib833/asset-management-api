@@ -1,0 +1,62 @@
+USE [JamunaBankProcurement];
+GO
+
+SET NOCOUNT ON;
+
+DECLARE @CctvAssetId BIGINT =
+(
+    SELECT TOP (1) ASSET_ID
+    FROM dbo.ASSET_MASTER
+    WHERE IS_ACTIVE = 1
+      AND (ASSET_CODE = 'CCTV' OR ASSET_NAME = 'CCTV')
+    ORDER BY ASSET_ID
+);
+
+IF @CctvAssetId IS NOT NULL
+BEGIN
+    INSERT dbo.WORKFLOW_RULE
+    (
+        RULE_CODE, RULE_NAME, ASSET_ID, REQ_TYPE, MIN_AMOUNT, MAX_AMOUNT,
+        CONCERN_DIVISION_ID, AUTHORITY_BEFORE_DIVISION,
+        DESTINATION_AFTER_CONCERN, PRIORITY_ORDER, IS_ACTIVE,
+        EFFECTIVE_FROM, EFFECTIVE_TO, CREATED_BY
+    )
+    SELECT
+        CONCAT('CCTV-REPL-', n.WORKFLOW_RULE_ID),
+        LEFT(CONCAT('CCTV replacement - ', n.RULE_NAME), 200),
+        n.ASSET_ID,
+        'REPLACEMENT',
+        n.MIN_AMOUNT,
+        n.MAX_AMOUNT,
+        n.CONCERN_DIVISION_ID,
+        n.AUTHORITY_BEFORE_DIVISION,
+        n.DESTINATION_AFTER_CONCERN,
+        n.PRIORITY_ORDER,
+        1,
+        CONVERT(DATE, SYSUTCDATETIME()),
+        NULL,
+        'startup-cctv-replacement-rule'
+    FROM dbo.WORKFLOW_RULE n
+    WHERE n.ASSET_ID = @CctvAssetId
+      AND n.REQ_TYPE = 'NEW'
+      AND n.IS_ACTIVE = 1
+      AND n.EFFECTIVE_FROM <= CONVERT(DATE, SYSUTCDATETIME())
+      AND (n.EFFECTIVE_TO IS NULL OR n.EFFECTIVE_TO >= CONVERT(DATE, SYSUTCDATETIME()))
+      AND NOT EXISTS
+      (
+          SELECT 1
+          FROM dbo.WORKFLOW_RULE c
+          WHERE c.RULE_CODE = CONCAT('CCTV-REPL-', n.WORKFLOW_RULE_ID)
+      )
+      AND NOT EXISTS
+      (
+          SELECT 1
+          FROM dbo.WORKFLOW_RULE r
+          WHERE r.ASSET_ID = n.ASSET_ID
+            AND r.REQ_TYPE = 'REPLACEMENT'
+            AND r.IS_ACTIVE = 1
+            AND ISNULL(r.MIN_AMOUNT, -1) = ISNULL(n.MIN_AMOUNT, -1)
+            AND ISNULL(r.MAX_AMOUNT, -1) = ISNULL(n.MAX_AMOUNT, -1)
+      );
+END;
+GO

@@ -1,0 +1,3 @@
+using JamunaBank.Procurement.API.DTOs;using JamunaBank.Procurement.API.Models;
+namespace JamunaBank.Procurement.API.Services.Interfaces;
+public interface IProcurementTrackingService{Task<IReadOnlyList<ProcurementStatusDto>>GetStatusesAsync(CancellationToken ct);Task<IReadOnlyList<ProcurementTrackingSearchDto>>SearchAsync(string?requisitionNo,long?orgUnitId,long?assetId,string?statusCode,CancellationToken ct);Task<ProcurementTrackingDetailDto?>GetAsync(long requisitionId,CancellationToken ct);Task<StoredProcedureResult?>UpdateStatusAsync(ProcurementTrackingUpdateRequest request,CancellationToken ct);Task<ProcurementTrackingBulkResult>BulkUpdateStatusAsync(ProcurementTrackingUpdateRequest request,CancellationToken ct);}

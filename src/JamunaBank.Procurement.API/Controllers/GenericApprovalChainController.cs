@@ -44,6 +44,15 @@ public sealed class GenericApprovalChainController(IGenericApprovalChainService 
     public async Task<ActionResult<ApiResponse<IReadOnlyList<PendingGenericApprovalDto>>>> GetMyPending(CancellationToken ct) =>
         Ok(ApiResponse<IReadOnlyList<PendingGenericApprovalDto>>.Ok(await service.GetMyPendingAsync(ct),"Pending generic approvals loaded.",HttpContext.TraceIdentifier));
 
+    [HttpGet("generic-approval-steps/{id:long}/review")]
+    public async Task<ActionResult<ApiResponse<RequisitionDetailDto>>> GetReview(long id,CancellationToken ct)
+    {
+        var detail=await service.GetReviewDetailAsync(id,ct);
+        return detail is null
+            ? NotFound(ApiResponse<RequisitionDetailDto>.Fail("This approval task is no longer pending with you.",[],HttpContext.TraceIdentifier))
+            : Ok(ApiResponse<RequisitionDetailDto>.Ok(detail,"Approval review detail loaded.",HttpContext.TraceIdentifier));
+    }
+
     [HttpGet("requisitions/{id:long}/approval-chain")]
     public async Task<ActionResult<ApiResponse<IReadOnlyList<ApprovalChainEntryDto>>>> GetChain(long id,CancellationToken ct) =>
         Ok(ApiResponse<IReadOnlyList<ApprovalChainEntryDto>>.Ok(await service.GetByRequisitionAsync(id,ct),"Approval chain loaded.",HttpContext.TraceIdentifier));

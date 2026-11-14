@@ -63,6 +63,11 @@ public sealed class GenericApprovalChainRepository(IStoredProcedureExecutor proc
             r.GetInt32(r.GetOrdinal("STEP_ORDER")),r.GetString(r.GetOrdinal("STEP_CODE")),r.GetString(r.GetOrdinal("STEP_NAME")),r.GetString(r.GetOrdinal("APPROVAL_MODE")),
             r.GetInt32(r.GetOrdinal("REQUIRED_APPROVAL_COUNT")),r.GetNullable<DateTime>("ACTIVATED_ON")),[I("@EmployeeId",SqlDbType.VarChar,employeeId,30)],ct);
 
+    public async Task<RequisitionDetailDto?> GetReviewDetailAsync(long workflowInstanceStepId,string employeeId,CancellationToken ct) =>
+        RequisitionDetailDataSetMapper.Map(await StoredProcedures.QueryDataSetAsync(
+            "dbo.usp_WorkflowApprovalChain_GetReviewDetail",
+            [I("@WorkflowInstanceStepId",SqlDbType.BigInt,workflowInstanceStepId),I("@EmployeeId",SqlDbType.VarChar,employeeId,30)],ct));
+
     public Task<IReadOnlyList<ApprovalChainEntryDto>> GetByRequisitionAsync(long requisitionId,CancellationToken ct) =>
         StoredProcedures.QueryAsync<ApprovalChainEntryDto>("dbo.usp_WorkflowApprovalChain_GetByRequisition",r => new(
             r.GetInt64(r.GetOrdinal("WORKFLOW_INSTANCE_STEP_ID")),r.GetInt64(r.GetOrdinal("WORKFLOW_INSTANCE_ID")),r.GetInt32(r.GetOrdinal("STEP_ORDER")),

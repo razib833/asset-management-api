@@ -13,6 +13,7 @@ public interface IGenericApprovalChainService
     Task<StoredProcedureResult?> SaveRuleStepAsync(long? id,SaveWorkflowRuleStepRequest request,CancellationToken ct);
     Task<StoredProcedureResult?> InitializeAsync(long workflowInstanceId,CancellationToken ct);
     Task<IReadOnlyList<PendingGenericApprovalDto>> GetMyPendingAsync(CancellationToken ct);
+    Task<RequisitionDetailDto?> GetReviewDetailAsync(long workflowInstanceStepId,CancellationToken ct);
     Task<IReadOnlyList<ApprovalChainEntryDto>> GetByRequisitionAsync(long requisitionId,CancellationToken ct);
     Task<StoredProcedureResult?> ActAsync(long stepId,GenericApprovalActionRequest request,CancellationToken ct);
 }
